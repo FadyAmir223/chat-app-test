@@ -4,6 +4,7 @@ const setupSocket = (server) => {
     const io = new Server(server, {
         cors: {
             origin: `${CLIENT_URL}:${CLIENT_PORT}`,
+            methods: ['GET', 'POST'],
         },
     });
     io.on('connection', (socket) => {
@@ -11,10 +12,10 @@ const setupSocket = (server) => {
         socket.on('disconnect', (reason) => {
             console.log('client disconnected: ', reason);
         });
-        socket.join('clock-room');
+        socket.on('join_room', (data) => {
+            console.log(data);
+            socket.emit('leave-room', data + '-' + 'hello');
+        });
     });
-    setInterval(() => {
-        io.to('clock-room').emit('time', 'msg');
-    }, 10000);
 };
 export default setupSocket;

@@ -6,6 +6,7 @@ const setupSocket = (server) => {
   const io = new Server(server, {
     cors: {
       origin: `${CLIENT_URL}:${CLIENT_PORT}`,
+      methods: ['GET', 'POST'],
     },
   });
 
@@ -16,12 +17,31 @@ const setupSocket = (server) => {
       console.log('client disconnected: ', reason);
     });
 
-    socket.join('clock-room');
-  });
+    socket.on('join_room', (data) => {
+      console.log(data);
+      // socket.join(data)
+      socket.emit('leave-room', data + '-' + 'hello');
+    });
 
-  setInterval(() => {
-    io.to('clock-room').emit('time', 'msg');
-  }, 10000);
+    // socket.to(room).emit('receive_message', {
+    //   message: `${username} has joined the chat room`,
+    //   username: CHAT_BOT,
+    // });
+
+    // socket.emit('receive_message', {
+    //   message: `Welcome ${username}`,
+    //   username: CHAT_BOT,
+    // });
+
+    // let chatRoom = '';
+    // let allUsers = [];
+
+    // chatRoom = room;
+    // allUsers.push({ id: socket.id, username, room });
+    // chatRoomUsers = allUsers.filter((user) => user.room === room);
+    // socket.to(room).emit('chatroom_users', chatRoomUsers);
+    // socket.emit('chatroom_users', chatRoomUsers);
+  });
 };
 
 export default setupSocket;
