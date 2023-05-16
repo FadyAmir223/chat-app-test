@@ -1,23 +1,18 @@
-type friends = {
-  name: string;
-  online: boolean;
-  color: string;
-  nick: string;
-};
-
 type UserGroupProps = {
-  group: number[];
-  friendsStats: friends[];
+  group: {
+    name: string;
+    online: boolean;
+    color: string;
+    nick: string;
+  }[];
+  membersNo: number;
 };
 
-const UserGroup = ({ group, friendsStats }: UserGroupProps) => {
-  const friend_1 = friendsStats[group[0]];
-  const friend_2 = friendsStats[group[1]];
-
+const UserGroup = ({ group, membersNo }: UserGroupProps) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center cursor-pointer hover:bg-gray-200 py-2">
       <div className="relative w-10 h-10 mx-3">
-        {[friend_1, friend_2].map((friend, idx) => (
+        {group.map((friend, idx) => (
           <span
             key={friend.name}
             className={`rounded-full absolute w-2/3 h-2/3 border border-black text-sm grid place-items-center ${
@@ -32,8 +27,8 @@ const UserGroup = ({ group, friendsStats }: UserGroupProps) => {
           </span>
         ))}
       </div>
-      <h4 className="text-md">{`${friend_1.name}, ${friend_2.name}${
-        group.length > 2 ? ', ..' : ''
+      <h4 className="text-md">{`${group[0].name}, ${group[1].name}${
+        membersNo > 2 ? `, ${membersNo - 2} others` : ''
       }`}</h4>
     </div>
   );

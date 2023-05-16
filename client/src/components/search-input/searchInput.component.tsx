@@ -23,7 +23,7 @@ const SearchInput = ({
   };
 
   return (
-    <div className="relative mt-3 mb-5">
+    <div className="relative mt-3">
       <RiSearchLine
         className={`text-gray-400 absolute top-1/2 left-2 -translate-y-1/2 transition-opacity duration-100 ${
           isFocused ? 'opacity-0' : 'opacity-100'
