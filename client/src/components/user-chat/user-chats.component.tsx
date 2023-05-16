@@ -7,7 +7,7 @@ type FriendChatProps = {
   };
 };
 
-const UserChats = ({
+const UserChat = ({
   friend: { name, online, color, nick },
 }: FriendChatProps) => {
   return (
@@ -26,4 +26,4 @@ const UserChats = ({
   );
 };
 
-export default UserChats;
+export default UserChat;

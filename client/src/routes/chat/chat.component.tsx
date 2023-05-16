@@ -2,7 +2,8 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { useState } from 'react';
 
 import SearchInput from '../../components/search-input/searchInput.component';
-import UserChats from '../../components/user-chats/user-chats.component';
+import UserChat from '../../components/user-chat/user-chats.component';
+import UserGroup from '../../components/user-group/user.group';
 
 const friends = ['fezza', 'jessy', 'petra', 'hala', 'fady', 'peter'];
 
@@ -52,6 +53,7 @@ const Chat = () => {
           <h1 className="text-2xl">Chats</h1>
           <BsPencilSquare className="cursor-pointer text-xl" />
         </div>
+
         <SearchInput
           searchField={searchField}
           setSearchField={setSearchField}
@@ -61,42 +63,21 @@ const Chat = () => {
 
         {searchField
           ? filteredFriends.map((friend) => (
-              <UserChats key={friend.name} friend={friend} />
+              <UserChat key={friend.name} friend={friend} />
             ))
           : isFocused
           ? null
-          : chats.map((chat) => (
-              <UserChats key={chat} friend={friendsStats[chat]} />
-            ))}
-
-        {groups.map((group, idx) => {
-          const friend_1 = friendsStats[group[0]];
-          const friend_2 = friendsStats[group[1]];
-
-          return (
-            <div key={idx} className="flex items-center">
-              <div className="relative w-10 h-10 mx-3">
-                {[friend_1, friend_2].map((friend, idx) => (
-                  <span
-                    key={friend.name}
-                    className={`rounded-full absolute w-2/3 h-2/3 border border-black text-sm grid place-items-center ${
-                      friend.color
-                    } ${idx === 0 ? 'bottom-0 right-0' : 'top-0 left-0'} ${
-                      friend.online
-                        ? 'before:bg-green-400 before:rounded-full before:w-[10px] before:h-[10px] before:absolute before:-bottom-[2px] before:-right-[2px]'
-                        : ''
-                    }`}
-                  >
-                    {friend.nick}
-                  </span>
-                ))}
-              </div>
-              <h4 className="text-md">{`${friend_1.name}, ${friend_2.name}${
-                group.length > 2 ? ', ..' : ''
-              }`}</h4>
-            </div>
-          );
-        })}
+          : chats_groups.map((chatBox, idx) =>
+              typeof chatBox === 'number' ? (
+                <UserChat key={chatBox} friend={friendsStats[chatBox]} />
+              ) : (
+                <UserGroup
+                  key={idx}
+                  group={chatBox}
+                  friendsStats={friendsStats}
+                />
+              )
+            )}
       </div>
     </div>
   );
