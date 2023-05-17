@@ -1,5 +1,6 @@
 import { FormEvent, useRef } from 'react';
 import RegisterField from '../../components/register-field/register-field.component';
+import axios from 'axios';
 
 const formFields = [
   { id: 'username', placeholder: 'Username' },
@@ -9,19 +10,27 @@ const formFields = [
 const Login = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formRef.current) return;
 
     const formData = new FormData(formRef.current);
 
-    const data = {
+    const userData = {
       username: formData.get('username'),
       password: formData.get('password'),
     };
 
-    if (!(data.username && data.password)) return;
-    console.log(data);
+    if (!(userData.username && userData.password)) return;
+
+    const url = import.meta.env.VITE_SERVER_URL;
+
+    try {
+      const { data } = await axios.post(`${url}/api/auth/login`, userData);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
 
     // formRef.current.reset();
   };

@@ -17,6 +17,7 @@ import {
   SESSION_KEY_1,
   SESSION_KEY_2,
 } from '../../utils/loadEnv.js';
+import { localSignup } from './_local.js';
 
 const auth = express.Router();
 
@@ -48,6 +49,18 @@ auth.use(passport.session());
 // auth.use('/facebook', facebook);
 // auth.use('/github', github);
 // auth.use('/twitter', twitter);
+
+// auth.use('/local', local);
+
+auth.post('/signup', localSignup);
+
+auth.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: `${CLIENT_URL}:${CLIENT_PORT}/chat`,
+    failureRedirect: `${CLIENT_URL}:${CLIENT_PORT}/login`,
+  })
+);
 
 auth.get('/logout', (req, res) => {
   req.logout((err) => res.redirect(`${CLIENT_URL}:${CLIENT_PORT}/`));

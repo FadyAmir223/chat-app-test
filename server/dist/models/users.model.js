@@ -1,6 +1,8 @@
 import User from './users.mongo.js';
 const findOrCreateUser = async (user) => {
-    return await User.findOneAndUpdate({ id: user.id }, user, { upsert: true });
+    return await User.findOneAndUpdate({ username: user.username }, user, {
+        upsert: true,
+    });
 };
 const getUser = async (id) => {
     return await User.findOne({ id }, '-_id -__v');

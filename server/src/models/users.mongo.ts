@@ -10,19 +10,19 @@ import mongoose from 'mongoose';
 // },
 
 const userSchema = new mongoose.Schema({
-  id: {
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
     type: String,
     required: true,
   },
-  displayName: {
+  password: {
     type: String,
     required: true,
   },
-  imgUrl: String,
-  provider: String,
-  accessToken: String,
-  refreshToken: String,
-  expireDate: Number,
 });
 
 export default mongoose.model('User', userSchema);

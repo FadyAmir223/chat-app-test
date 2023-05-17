@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { exec } from 'child_process';
+// import { exec } from 'child_process';
 
 import { MONGO_URL, NODE_ENV } from './loadEnv.js';
 
@@ -17,8 +17,8 @@ mongoose.connection.on('error', (err) => {
 });
 
 const mongoConnect = async () => {
-  if (NODE_ENV === 'development')
-    exec('mongod --dbpath "G:/user tools/mongoDB/data"');
+  // if (NODE_ENV === 'development')
+  // exec('mongod --dbpath "G:/user tools/mongoDB/data"');
   await mongoose.connect(DB_URL);
 };
 
