@@ -1,6 +1,7 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import RegisterField from '../../components/register-field/register-field.component';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const formFields = [
   { id: 'username', placeholder: 'Username' },
@@ -8,7 +9,9 @@ const formFields = [
 ];
 
 const Login = () => {
+  const [errorMessage, setErrorMessage] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,17 +24,20 @@ const Login = () => {
       password: formData.get('password'),
     };
 
-    if (!(userData.username && userData.password)) return;
-
-    const url = import.meta.env.VITE_SERVER_URL;
+    if (!(userData.username && userData.password))
+      return setErrorMessage('empty field');
 
     try {
-      const { data } = await axios.post(`${url}/api/auth/login`, userData);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/local/login`,
+        userData
+      );
       console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
 
+      // navigate('/chat');
+    } catch (error) {
+      console.log(error.response.data);
+    }
     // formRef.current.reset();
   };
 
@@ -48,6 +54,10 @@ const Login = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none active:shadow-outline">
               Login
             </button>
+          </div>
+
+          <div className="text-red-500 text-center h-6 text-sm">
+            {errorMessage}
           </div>
 
           <div className="flex items-center justify-center">

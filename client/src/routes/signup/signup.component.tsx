@@ -1,6 +1,7 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import RegisterField from '../../components/register-field/register-field.component';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const formFields = [
   { id: 'email', placeholder: 'Email' },
@@ -11,6 +12,8 @@ const formFields = [
 
 const Signup = () => {
   const formRef = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,37 +33,43 @@ const Signup = () => {
         userData.email &&
         userData.username &&
         userData.password &&
-        userData.confirmPassword &&
-        userData.password == userData.confirmPassword
+        userData.confirmPassword
       )
     )
-      return;
+      return setErrorMessage('empty field');
 
-    const url = import.meta.env.VITE_SERVER_URL;
+    if (userData.password !== userData.confirmPassword)
+      return setErrorMessage('unmatched password');
 
     try {
-      const { data } = await axios.post(`${url}/api/auth/signup`, userData);
-      console.log(data);
+      await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/local/signup`,
+        userData
+      );
+      navigate('/chat');
     } catch (error) {
-      console.log(error);
+      return setErrorMessage(error?.response.data.message);
     }
 
     // formRef.current.reset();
   };
 
-  const renderFormFields = () =>
-    formFields.map((field) => <RegisterField key={field.id} field={field} />);
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-md px-8 py-6 w-full max-w-sm">
         <form ref={formRef} onSubmit={handleSubmit}>
-          {renderFormFields()}
+          {formFields.map((field) => (
+            <RegisterField key={field.id} field={field} />
+          ))}
 
-          <div className="flex justify-center mb-4">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none active:shadow-outline">
+          <div className="text-center">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none active:shadow-outline mb-2">
               Register
             </button>
+          </div>
+
+          <div className="text-red-500 text-center h-6 text-sm">
+            {errorMessage}
           </div>
 
           <div className="flex items-center justify-center text-sm text-gray-600">

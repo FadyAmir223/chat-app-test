@@ -17,8 +17,8 @@ const findOrCreateUser = async (user) => {
   });
 };
 
-const getUser = async (id) => {
-  return await User.findOne({ id }, '-_id -__v');
+const getUser = async (username) => {
+  return await User.findOne({ username }, '-_id -__v');
 };
 
 const getUsers = async () => {
@@ -26,8 +26,8 @@ const getUsers = async () => {
 };
 
 const updateUser = async (user) => {
-  const { id, ...data } = user;
-  await User.updateOne({ id }, { $set: data });
+  const { username, ...data } = user;
+  await User.updateOne({ username }, { $set: data });
 };
 
 export { findOrCreateUser, getUser, getUsers, updateUser };

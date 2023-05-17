@@ -4,12 +4,7 @@ import cookieSession from 'cookie-session';
 
 import { checkLoggedIn, checkPermissions } from './checks.js';
 import './passport-setup.js';
-import refreshTokenMiddleware from './refresh.js';
-
-// import google from './_google.js';
-// import facebook from './_facebook.js';
-// import github from './_github.js';
-// import twitter from './_twitter.js';
+import local from './_local.js';
 
 import {
   CLIENT_URL,
@@ -17,15 +12,14 @@ import {
   SESSION_KEY_1,
   SESSION_KEY_2,
 } from '../../utils/loadEnv.js';
-import { localSignup } from './_local.js';
 
 const auth = express.Router();
 
 auth.use(
   cookieSession({
-    name: 'user',
+    name: 'userSession',
     keys: [SESSION_KEY_1, SESSION_KEY_2],
-    // maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
   })
 );
 
@@ -45,22 +39,7 @@ auth.use(passport.initialize());
 
 auth.use(passport.session());
 
-// auth.use('/google', google);
-// auth.use('/facebook', facebook);
-// auth.use('/github', github);
-// auth.use('/twitter', twitter);
-
-// auth.use('/local', local);
-
-auth.post('/signup', localSignup);
-
-auth.post(
-  '/login',
-  passport.authenticate('local', {
-    successRedirect: `${CLIENT_URL}:${CLIENT_PORT}/chat`,
-    failureRedirect: `${CLIENT_URL}:${CLIENT_PORT}/login`,
-  })
-);
+auth.use('/local', local);
 
 auth.get('/logout', (req, res) => {
   req.logout((err) => res.redirect(`${CLIENT_URL}:${CLIENT_PORT}/`));
@@ -68,21 +47,10 @@ auth.get('/logout', (req, res) => {
 
 auth.get(
   '/secret',
-  refreshTokenMiddleware,
-  checkLoggedIn,
-  checkPermissions,
-  (req, res) => res.status(200).json(req.user)
+  // refreshTokenMiddleware,
+  // checkLoggedIn,
+  // checkPermissions,
+  (req, res) => res.status(200).json(req.user || { success: false })
 );
 
 export default auth;
-
-// TODO: different users different permissions (role base access control)
-// https://www.okta.com/identity-101/what-is-role-based-access-control-rbac/
-
-// TODO: more security
-// https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
-
-// hosting: aws
-// buy domain: ?
-// cert: letsencrypt.org
-// should have domain name & ip address on some server
