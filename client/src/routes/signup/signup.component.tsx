@@ -42,11 +42,13 @@ const Signup = () => {
       return setErrorMessage('unmatched password');
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/auth/local/signup`,
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/signup`,
         userData
       );
-      navigate('/chat');
+      console.log(data);
+
+      // navigate('/chat');
     } catch (error) {
       return setErrorMessage(error?.response.data.message);
     }

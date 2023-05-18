@@ -29,7 +29,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/auth/local/login`,
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/login`,
         userData
       );
       console.log(data);
